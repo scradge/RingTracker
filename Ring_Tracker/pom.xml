@@ -55,6 +55,12 @@
 		</mailingList>
 	</mailingLists>
 
+	<scm>
+		<connection>scm:git:git://github.com/scradge/RingTracker</connection>
+		<developerConnection>scm:git:git@github.com:scradge/RingTracker</developerConnection>
+		<tag>Ring_Tracker-0.0.1</tag>
+		<url>https://github.com/scradge/RingTracker</url>
+	</scm>
 
 	<issueManagement>
 		<system>GitHub Issues</system>

@@ -10,11 +10,14 @@ public class OpenImagePlugin implements PlugIn {
 
 	@Override
 	public void run(String arg0) {
+		/**
 		String path = OpenImageDialog.getImagePath();
 		
 		ImagePlus image = new ImagePlus(path);
 		image.show();
 	}
+	
+	*/
 
 	/**
 	@Override
@@ -24,4 +27,5 @@ public class OpenImagePlugin implements PlugIn {
 	}
 	*/
 
+	}
 }
