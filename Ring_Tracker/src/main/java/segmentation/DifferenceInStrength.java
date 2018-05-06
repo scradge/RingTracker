@@ -1,7 +1,21 @@
 package segmentation;
 
+/**
+ * This class contains only static methods designed to calculate the Difference in Strength 
+ * 
+ * @author Ryan Dundon
+ */
+
 public class DifferenceInStrength {
 
+	/**
+	 * Calculates Difference in Strength for short arrays
+	 * @param position    position of the pixel within the pixel array
+	 * @param imageWidth  width of the image containing the pixel
+	 * @param imageHeight Height of the image containing the pixel
+	 * @param pixels      one dimensional array containing the pixel of the image
+	 * @return short      returns a short value of the difference in strength
+	 */
 	public static short DISShort(int position, int imageWidth, int imageHeight, short[] pixels) {
 		short dIS = 0; 
 		int[] xyPositions = calculateXY(position, imageWidth);
@@ -9,16 +23,20 @@ public class DifferenceInStrength {
 		int yPosition = xyPositions[1];
 		
 		// If pixel is in main body
-		//System.out.print("isEdge:" + isEdge(xPosition, yPosition, imageWidth, imageHeight) + "  ");
 		if (!isEdge(xPosition, yPosition, imageWidth, imageHeight)) dIS = calculateShort(position, imageWidth, pixels);
 		
 		return dIS;
 	}
 	
 	/**
-	* Return true if x position is equal to 0 or the image width
-	* Return true if y position is equal to 0 or the image height
-	* Else return false
+	 * Checks if the position of the pixel is an the edge of the image
+	 * 
+	 * @param xPosition   position of y coordinate of the pixel being tested
+	 * @param yPosition   position of y coordinate of the pixel being tested
+	 * @param imageWidth  width of the image being tested
+	 * @param imageHeight height of the image being tested
+	 * @return boolean    Return true if x position is equal to 0 or the image width or
+	 *                    if y position is equal to 0 or the image height
 	*/
 	private static boolean isEdge(int xPosition, int yPosition, int imageWidth, int imageHeight) {
 		if (xPosition == 0) return true;					//Left
@@ -27,43 +45,15 @@ public class DifferenceInStrength {
 		else if (yPosition == (imageHeight - 1)) return true;		//Bottom
 		else return false;
 	}
-	
+
 	/**
 	 * 
-	 * @param xPosition
-	 * @param yPosition
+	 * @param position
 	 * @param imageWidth
-	 * @param imageHeight
-	 * @return 
+	 * @param pixels
+	 * @return short
 	 */
-	private static boolean isCorner(int xPosition, int yPosition, int imageWidth, int imageHeight) {
-		if ((xPosition == 0) && (yPosition == 0)) return true;								//Top-Left
-		else if ((xPosition == 0) && (yPosition == imageHeight)) return true;				//Bottom-Left
-		else if ((xPosition == imageWidth) && (yPosition == 0)) return true;				//Top-Right
-		else if ((xPosition == imageWidth) && (yPosition == imageHeight)) return true;		//Bottom-Right
-		else return false;
-	}
-	
-	private static short calculateShort(int position, int imageWidth, short[] pixels) {
-		/**
-		 * z1	z2	z3
-		 * z4	X	z5
-		 * z6	z7	z8
-		 */	
-		
-		/**
-		 * z1 = current position - (width + 1)
-		 * z2 = current position - width
-		 * z3 = current position - (with - 1)
-		 * z4 = current position - 1
-		 * z5 = current position + 1
-		 * z6 = current position + (width - 1)
-		 * z7 = current position + width
-		 * z8 = current position + (width + 1)
-		 */
-		
-		//short edgeStrength = 0;
-		
+	private static short calculateShort(int position, int imageWidth, short[] pixels) {	
 		// Get position for surrounding pixels
 		int z1 = position - (imageWidth + 1);
 		int z2 = position - imageWidth;
@@ -81,25 +71,20 @@ public class DifferenceInStrength {
 		+ Math.abs(pixels[z4] - pixels[z5]) + Math.abs(pixels[z4] - pixels[z7]) + Math.abs(pixels[z4] - pixels[z8])
 		+ Math.abs(pixels[z5] - pixels[z6]) + Math.abs(pixels[z5] - pixels[z7])
 		+ Math.abs(pixels[z6] - pixels[z8]));
-		
-		//return edgeStrength;
 	}
 
+	/**
+	 * Calculates the X and Y coordinates of a pixel position for an Image that has been
+	 * flattened into a one-dimensional array.
+	 * 
+	 * @param position   position in the array created by flattening an image
+	 * @param imageWidth width of the image that position belongs to
+	 * @return int[]     returns a two element array with x at position 0 and y and position 1
+	 */
 	private static int[] calculateXY(int position, int imageWidth) {
 		int[] xy = new int[2];
-		
-		//Y
-		int y = (position) / imageWidth;
-		//System.out.print("Y:" + y + "  ");
-		
-		//X
-		int x = position - (y * imageWidth);
-		//System.out.print("X:" + x + "  ");
-		
-		xy[0] = x;
-		xy[1] = y;
-		
-		return xy;
-		
+		xy[1] = (position) / imageWidth; //y;
+		xy[0] = position - (xy[1] * imageWidth); //x;
+		return xy;		
 	}
 }
