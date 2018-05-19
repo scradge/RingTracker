@@ -15,8 +15,7 @@ public class OpenImagePlugin implements PlugIn {
 	public void run(String arg0) {
 		
 		// Open new ImagePlus
-		String path = OpenImageDialog.getImagePath();	
-		ImagePlus image = new ImagePlus(path);
+		ImagePlus image = new ImagePlus(OpenImageDialog.getImagePath());
 
 		// Get ImagePlus Dimensions	
 		int nSlices = image.getNSlices();
