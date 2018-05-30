@@ -18,7 +18,7 @@ public class Pixel implements Comparable<Pixel>{
 	public int getY() { return Y; }
 	public int getValue() { return VALUE; }
 	
-	private static final Comparator<Pixel> COMPARATOR = Comparator.comparingInt((Pixel pixel) -> pixel.X).thenComparingInt((Pixel pixel) -> pixel.Y).thenComparingInt((Pixel pixel) -> pixel.VALUE);
+	private static final Comparator<Pixel> COMPARATOR = Comparator.comparingInt((Pixel pixel) -> pixel.Y).thenComparingInt((Pixel pixel) -> pixel.X).thenComparingInt((Pixel pixel) -> pixel.VALUE);
 	
 	@Override
 	public int compareTo(Pixel pixel) {
