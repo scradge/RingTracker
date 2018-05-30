@@ -6,6 +6,7 @@ import java.util.Queue;
 public class KruskalMST {
 
 	private Queue<Edge> minSpanTree;
+	private UnionFind unionFind;
 	
 	public KruskalMST(EdgeWeightedGraph graph) {
 		
@@ -38,4 +39,8 @@ public class KruskalMST {
 	}
 	
 	public Iterable<Edge> edges() { return minSpanTree; }
+	
+	public Iterable<UnionFind> components() {return unionFind; }
+	
+	public int getUnitCount() { return unionFind.numOfComponents(); }
 }

@@ -4,7 +4,9 @@ import ij.ImagePlus;
 import ij.gui.GenericDialog;
 import ij.plugin.filter.PlugInFilter;
 import ij.process.ImageProcessor;
-import segmentation.AverageIntensity;
+import utils.Edge;
+import utils.EdgeWeightedGraph;
+import utils.KruskalMST;
 
 public class CellMaskPlugin implements PlugInFilter {
 
@@ -18,14 +20,41 @@ public class CellMaskPlugin implements PlugInFilter {
 		int threshold = getThreshold();
 		if (threshold == -1) return;
 		
-		// Retrieve the pixels of the current imageProcessor
-		int[][] pixels = imgProcessor.getIntArray();
+		// Sizes of the current imageProcessor
 		int imageHeight = imgProcessor.getHeight();
-		int imageWidth = imgProcessor.getWidth();
+		int imageWidth = imgProcessor.getWidth();		
+		int numOfVertices = imgProcessor.getPixelCount();
+		
+		// Create an edge weighted graph of the current processor and fill with edges
+		// Don't add any edges that are under the threshold
+		EdgeWeightedGraph graph = new EdgeWeightedGraph(numOfVertices);	
+		for (int x = 0; x < imageWidth; x++) {
+			for (int y = 0; y < imageHeight; y++) {
+				int currentPixel = imgProcessor.getPixel(x, y);
+				
+				// check surrounding pixel[8-Way]
+				for (int i = 1; i <= 8; i++) {
+					int[] nextPixel = getNextPixel(x, y, i);
+					int connectedPixel = imgProcessor.getPixel(nextPixel[0], nextPixel[1]);
+					int edgeWeight = getWeight(currentPixel, connectedPixel);
+					
+					if (edgeWeight >= threshold) {
+						Edge edge = new Edge(currentPixel, connectedPixel, edgeWeight);
+						graph.addEdge(edge);
+					}
+				}
+				
+			}
+		}
+		
+		
 		
 		// Use Kruskal's Algorithm to create UnionFind components(numbers above threshold are in cell bodies)
+		KruskalMST  minSpanTree = new KruskalMST(graph);
+		
 		
 		// For each UnionFind component make a new cell mask
+		int numOfCells = minSpanTree.getUnitCount();
 			// If a cell mask is too large break it in two
 		
 		// Make a new ImagePlus for each cell mask
@@ -51,5 +80,43 @@ public class CellMaskPlugin implements PlugInFilter {
 		gd.showDialog();
 		if (gd.wasCanceled()) return -1;	
 		return (int) gd.getNextNumber();
+	}
+	
+	private static int getWeight(int primaryVertex, int secondaryVertex) {
+		return (primaryVertex + secondaryVertex)/2;
+	}
+	
+	private static int[] getNextPixel(int currentX, int currentY, int position) {
+		int[] nextPixel = new int[2];
+		switch(position) {
+			case 1: 	nextPixel[0] = currentX--;
+						nextPixel[1] = currentY--;
+						break;		
+			case 2:		nextPixel[0] = currentX;
+						nextPixel[1] = currentY--;
+						break;
+			case 3:		nextPixel[0] = currentX++;
+						nextPixel[1] = currentY--;
+						break;
+			case 4:		nextPixel[0] = currentX--;
+						nextPixel[1] = currentY;
+						break;
+			case 5:		nextPixel[0] = currentX++;
+						nextPixel[1] = currentY;
+						break;
+			case 6:		nextPixel[0] = currentX--;
+						nextPixel[1] = currentY++;
+						break;
+			case 7:		nextPixel[0] = currentX;
+						nextPixel[1] = currentY++;
+						break;
+			case 8:		nextPixel[0] = currentX++;
+						nextPixel[1] = currentY++;
+						break;
+			default: 	nextPixel[0] = currentX;
+						nextPixel[1] = currentY;
+						break;
+		}
+		return nextPixel;
 	}
 }

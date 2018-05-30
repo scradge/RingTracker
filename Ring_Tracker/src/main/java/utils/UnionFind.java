@@ -1,24 +1,24 @@
 package utils;
 
-public class UnionFind {
+public class UnionFind {//implements Iterable{
 
 	private int[] id;	//access to component id (site indexed)
-	private int[] sz;	//size of component for roots (site indexed)
+	private int[] componentSize;	//size of component for roots (site indexed)
 	private int numOfComponents;
 	
-	public UnionFind(int n) {
-		this.numOfComponents = n;
+	public UnionFind(int numberOfVertices) {
+		this.numOfComponents = numberOfVertices;
 		
 		id = new int[numOfComponents];
 		for (int i = 0; i < numOfComponents; i++) id[i] = i; 
 		
-		sz = new int[numOfComponents];
-		for (int i = 0; i<n; i++) sz[i] = 1;
+		componentSize = new int[numOfComponents];
+		for (int i = 0; i<numOfComponents; i++) componentSize[i] = 1;
 	}
 	
 	public int numOfComponents() { return numOfComponents; }
 	
-	public boolean isConnected(int p, int q) { return find(p) == find(q); }
+	public boolean isConnected(int primaryVertex, int secondaryVertex) { return find(primaryVertex) == find(secondaryVertex); }
 	
 	public int find(int p) {
 		while (p != id[p]) p = id[p];
@@ -31,8 +31,26 @@ public class UnionFind {
 		if (i == j) return;
 		
 		//Make smaller root point to larger one
-		if (sz[i] < sz[j]) {id[i] = j; sz[j] += sz[i]; }
-		else {id[j] = i; sz[i] += sz[j]; }
+		if (componentSize[i] < componentSize[j]) {id[i] = j; componentSize[j] += componentSize[i]; }
+		else {id[j] = i; componentSize[i] += componentSize[j]; }
 		numOfComponents--;
 	} 
+/**	
+public Iterator<Item> iterator() { return new ListIterator(); }
+	
+	private class ListIterator implements Iterator<Item> {
+		
+		private Node current = first;
+		
+		public boolean hasNext() { return current != null; }
+		
+		public void remove() {}
+		
+		public Item next() {
+			Item item = current.item;
+			current = current.next;
+			return item;
+		}
+	}
+*/
 }
