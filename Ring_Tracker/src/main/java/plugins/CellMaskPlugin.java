@@ -1,7 +1,5 @@
 package plugins;
 
-import java.util.Queue;
-
 import ij.ImagePlus;
 import ij.gui.GenericDialog;
 import ij.plugin.filter.PlugInFilter;
