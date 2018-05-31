@@ -18,7 +18,8 @@ public class KruskalMST {
 		for (Edge e : graph.edges()) { edgeQueue.add(e); }
 		
 		//Create new unionFind the size of the graph
-		UnionFind unionFind = new UnionFind(graph.numberOfVertices());
+		//UnionFind unionFind = new UnionFind(graph.numberOfVertices());
+		UnionFind unionFind = new UnionFind();
 		
 		/**
 		 * While the queue of edges is not exhausted
@@ -29,7 +30,8 @@ public class KruskalMST {
 		 */
 		while (!edgeQueue.isEmpty() && minSpanTree.size() < graph.numberOfVertices()-1) {
 			Edge edge = edgeQueue.poll();															//Get next strongest edge
-			int primaryVertex = edge.primaryVertex(), secondaryVertex = edge.other(primaryVertex);	//Get the associated vertices of the current edge
+			//int primaryVertex = edge.primaryVertex(), secondaryVertex = edge.other(primaryVertex);
+			Pixel primaryVertex = edge.primaryVertex(), secondaryVertex = edge.other(primaryVertex);	//Get the associated vertices of the current edge
 			
 			if (unionFind.isConnected(primaryVertex, secondaryVertex)) continue;					//If the two vertices are already connected dont add the edge
 			
@@ -40,7 +42,9 @@ public class KruskalMST {
 	
 	public Iterable<Edge> edges() { return minSpanTree; }
 	
-	public Iterable<UnionFind> components() {return unionFind; }
-	
 	public int getUnitCount() { return unionFind.numOfComponents(); }
+	
+	public Queue<Pixel> getUnit(int index) {
+		return unionFind.getComponent(index);
+	}
 }
