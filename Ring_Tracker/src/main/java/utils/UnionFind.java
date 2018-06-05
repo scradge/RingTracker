@@ -9,7 +9,61 @@ public class UnionFind {//implements Iterable{
 
 	private int[] roots;	//points to root of component
 	private int[] componentSize;	//size of component for roots (site indexed)
-	private int numOfComponents;
+	private int numOfComponents;	
+	private List<Component> componentList;
+	
+	public UnionFind() {
+		componentList = new ArrayList<>();
+	}
+	
+	public boolean isConnected(Pixel primaryPixel, Pixel secondaryPixel) {
+		if(findComponent(primaryPixel) == findComponent(secondaryPixel)) return true;
+		
+
+		return false;
+	}
+	
+	// Returns Empty component if none is found
+	private Component findComponent(Pixel pixel) {
+		Component emptyComponent = new Component();
+		for (Component component : componentList) {
+			for (Pixel searchPixel : component.pixels) {
+				if (searchPixel.compareTo(pixel) == 0) return component;
+			}
+		}
+		return emptyComponent;
+	}
+	
+	public void union(Pixel primaryPixel, Pixel secondaryPixel) {
+		Component primaryComponent = findComponent(primaryPixel);
+		Component secondaryComponent = findComponent(secondaryPixel);
+		
+		int primaryLength = primaryComponent.pixels.size();
+		int secondaryLength = secondaryComponent.pixels.size();
+		
+		if (primaryLength >= secondaryLength) {
+			primaryComponent.pixels.addAll(secondaryComponent.pixels);
+			componentList.remove(secondaryComponent);
+		}
+		else {
+			secondaryComponent.pixels.addAll(primaryComponent.pixels);
+			componentList.remove(primaryComponent);
+		}	
+	}
+	
+	public int numOfComponents() {
+		if (componentList != null) return componentList.size();
+		return 0;
+	}
+	
+	public Queue<Pixel> getComponent(int index) {
+		return (Queue<Pixel>) componentList.get(index);
+	}
+	
+	private class Component {
+		Queue<Pixel> pixels = new PriorityQueue<>();
+	}
+	
 	
 	
 	/**
@@ -72,66 +126,17 @@ public Iterator<Item> iterator() { return new ListIterator(); }
 	}
 */
 	
-	private List<Component> componentList;
 	
-	public UnionFind() {
-		componentList = new ArrayList<>();
-	}
 	
-	public boolean isConnected(Pixel primaryPixel, Pixel secondaryPixel) {
-		if(findComponent(primaryPixel) == findComponent(secondaryPixel)) return true;
-		
-		/**
-		for (Component component : componentList) {
-			boolean primaryFound = false;
-			boolean secondaryFound = false;
-			for (Pixel pixel : component.pixels) {
-				if (primaryPixel.compareTo(pixel) == 0) primaryFound = true;
-				if (secondaryPixel.compareTo(pixel) == 0) secondaryFound = true;
-			}
-			if (primaryFound && secondaryFound) return true;
+	/**
+	for (Component component : componentList) {
+		boolean primaryFound = false;
+		boolean secondaryFound = false;
+		for (Pixel pixel : component.pixels) {
+			if (primaryPixel.compareTo(pixel) == 0) primaryFound = true;
+			if (secondaryPixel.compareTo(pixel) == 0) secondaryFound = true;
 		}
-		*/
-		return false;
+		if (primaryFound && secondaryFound) return true;
 	}
-	
-	// Returns Empty component if none is found
-	private Component findComponent(Pixel pixel) {
-		Component emptyComponent = new Component();
-		for (Component component : componentList) {
-			for (Pixel searchPixel : component.pixels) {
-				if (searchPixel.compareTo(pixel) == 0) return component;
-			}
-		}
-		return emptyComponent;
-	}
-	
-	public void union(Pixel primaryPixel, Pixel secondaryPixel) {
-		Component primaryComponent = findComponent(primaryPixel);
-		Component secondaryComponent = findComponent(secondaryPixel);
-		
-		int primaryLength = primaryComponent.pixels.size();
-		int secondaryLength = secondaryComponent.pixels.size();
-		
-		if (primaryLength >= secondaryLength) {
-			primaryComponent.pixels.addAll(secondaryComponent.pixels);
-			componentList.remove(secondaryComponent);
-		}
-		else {
-			secondaryComponent.pixels.addAll(primaryComponent.pixels);
-			componentList.remove(primaryComponent);
-		}	
-	}
-	
-	public int numOfComponents() {
-		return componentList.size();
-	}
-	
-	public Queue<Pixel> getComponent(int index) {
-		return (Queue<Pixel>) componentList.get(index);
-	}
-	
-	private class Component {
-		Queue<Pixel> pixels = new PriorityQueue<>();
-	}
+	*/
 }

@@ -7,19 +7,24 @@ public class KruskalMST {
 
 	private Queue<Edge> minSpanTree;
 	private UnionFind unionFind;
+	private Queue<Edge> edgeQueue;
 	
 	public KruskalMST(EdgeWeightedGraph graph) {
 		
+		System.out.println("in Kruskal");
 		// Create a new Minimum Spanning Tree
 		minSpanTree = new PriorityQueue<>();
 		
 		// Create a Priority Queue containing all of the edges
-		Queue<Edge> edgeQueue = new PriorityQueue<>();
-		for (Edge e : graph.edges()) { edgeQueue.add(e); }
+		edgeQueue = new PriorityQueue<>();
+		for (Edge e : graph.edges()) { 
+			edgeQueue.add(e); 
+			System.out.println("Adding to edgeQueue");
+			}
 		
 		//Create new unionFind the size of the graph
 		//UnionFind unionFind = new UnionFind(graph.numberOfVertices());
-		UnionFind unionFind = new UnionFind();
+		unionFind = new UnionFind();
 		
 		/**
 		 * While the queue of edges is not exhausted
@@ -42,7 +47,10 @@ public class KruskalMST {
 	
 	public Iterable<Edge> edges() { return minSpanTree; }
 	
-	public int getUnitCount() { return unionFind.numOfComponents(); }
+	public int getUnitCount() { 
+		if (unionFind != null) return unionFind.numOfComponents(); 
+		return 0;
+	}
 	
 	public Queue<Pixel> getUnit(int index) {
 		return unionFind.getComponent(index);

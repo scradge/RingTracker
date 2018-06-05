@@ -5,6 +5,12 @@ import java.util.Iterator;
 public class Bag<Item> implements Iterable<Item> {
 	
 	private Node first;
+	private int length;
+	
+	public Bag() {
+		length = 0;
+		first = new Node();
+	}
 	
 	private class Node {
 		Item item;
@@ -16,7 +22,10 @@ public class Bag<Item> implements Iterable<Item> {
 		first = new Node();
 		first.item = item;
 		first.next = oldfirst;
+		length++;
 	}
+	
+	public int length() { return length;}
 	
 	public Iterator<Item> iterator() { return new ListIterator(); }
 	
