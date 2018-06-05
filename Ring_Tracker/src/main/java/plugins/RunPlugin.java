@@ -13,6 +13,7 @@ public class RunPlugin implements PlugInFilter{
 	ImagePlus image;
 	
 	
+	
 	@Override
 	public void run(ImageProcessor imgProcessor) {
 		processor = imgProcessor;
